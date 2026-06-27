@@ -1,0 +1,17 @@
+# Ignore local environment config
+.env
+postgres/.env
+keycloak/.env
+jenkins/.env
+kafka/.env
+
+# Ignore agent outputs and analysis files
+.agent/
+
+# IDE configurations
+.idea/
+.vscode/
+*.iml
+.settings/
+.classpath
+.project
