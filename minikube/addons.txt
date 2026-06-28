@@ -1,0 +1,4 @@
+# List of minikube addons to enable
+ingress
+dashboard
+metrics-server

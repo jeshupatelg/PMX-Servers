@@ -15,6 +15,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - gateway_net
+      - minikube_net
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/jenkins/login || exit 1"]
       interval: 10s
@@ -27,4 +28,6 @@ volumes:
 
 networks:
   gateway_net:
+    external: true
+  minikube_net:
     external: true

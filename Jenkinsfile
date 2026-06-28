@@ -2,6 +2,7 @@ def deployPostgres = false
 def deployKeycloak = false
 def deployJenkins = false
 def deployKafka = false
+def deployMinikube = false
 
 pipeline {
     agent any
@@ -11,6 +12,7 @@ pipeline {
         booleanParam(name: 'DEPLOY_KEYCLOAK', defaultValue: true, description: 'Deploy Keycloak Server')
         booleanParam(name: 'DEPLOY_JENKINS', defaultValue: true, description: 'Deploy Jenkins Server')
         booleanParam(name: 'DEPLOY_KAFKA', defaultValue: true, description: 'Deploy Kafka Server')
+        booleanParam(name: 'DEPLOY_MINIKUBE', defaultValue: true, description: 'Deploy Minikube & Kubernetes configurations')
         string(name: 'DEPLOY_SERVERS_LIST', defaultValue: '', description: 'Comma-separated list of servers to deploy (e.g., postgres,kafka or all) when called by other jobs')
     }
 
@@ -29,15 +31,17 @@ pipeline {
                         deployKeycloak = list.contains("keycloak") || list.contains("all")
                         deployJenkins = list.contains("jenkins") || list.contains("all")
                         deployKafka = list.contains("kafka") || list.contains("all")
+                        deployMinikube = list.contains("minikube") || list.contains("all")
                     } else {
                         echo "Triggered manually or via SCM. Using parameter checkbox values."
                         deployPostgres = params.DEPLOY_POSTGRES
                         deployKeycloak = params.DEPLOY_KEYCLOAK
                         deployJenkins = params.DEPLOY_JENKINS
                         deployKafka = params.DEPLOY_KAFKA
+                        deployMinikube = params.DEPLOY_MINIKUBE
                     }
 
-                    echo "Target deployment states -> Postgres: ${deployPostgres}, Keycloak: ${deployKeycloak}, Jenkins: ${deployJenkins}, Kafka: ${deployKafka}"
+                    echo "Target deployment states -> Postgres: ${deployPostgres}, Keycloak: ${deployKeycloak}, Jenkins: ${deployJenkins}, Kafka: ${deployKafka}, Minikube: ${deployMinikube}"
                 }
             }
         }
@@ -154,6 +158,18 @@ pipeline {
             steps {
                 dir('kafka') {
                     sh 'docker compose up -d'
+                }
+            }
+        }
+
+        stage('Deploy minikube') {
+            when {
+                expression { return deployMinikube }
+            }
+            steps {
+                dir('minikube') {
+                    sh 'chmod +x setup.sh'
+                    sh 'bash setup.sh'
                 }
             }
         }
