@@ -1,7 +1,7 @@
 name: kafka
 services:
   kafka:
-    image: apache/kafka:${KAFKA_VERSION:-3.7.0}
+    image: apache/kafka:${KAFKA_VERSION:-4.0.2}
     container_name: kafka
     ports:
       - "${KAFKA_EXTERNAL_PORT:-9092}:29092"

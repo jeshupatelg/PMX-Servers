@@ -3,6 +3,7 @@ def deployKeycloak = false
 def deployJenkins = false
 def deployKafka = false
 def deployMinikube = false
+def deployRedis = false
 
 pipeline {
     agent any
@@ -12,6 +13,7 @@ pipeline {
         booleanParam(name: 'DEPLOY_KEYCLOAK', defaultValue: true, description: 'Deploy Keycloak Server')
         booleanParam(name: 'DEPLOY_JENKINS', defaultValue: true, description: 'Deploy Jenkins Server')
         booleanParam(name: 'DEPLOY_KAFKA', defaultValue: true, description: 'Deploy Kafka Server')
+        booleanParam(name: 'DEPLOY_REDIS', defaultValue: true, description: 'Deploy Redis Server')
         booleanParam(name: 'DEPLOY_MINIKUBE', defaultValue: true, description: 'Deploy Minikube & Kubernetes configurations')
         string(name: 'DEPLOY_SERVERS_LIST', defaultValue: '', description: 'Comma-separated list of servers to deploy (e.g., postgres,kafka or all) when called by other jobs')
     }
@@ -31,6 +33,7 @@ pipeline {
                         deployKeycloak = list.contains("keycloak") || list.contains("all")
                         deployJenkins = list.contains("jenkins") || list.contains("all")
                         deployKafka = list.contains("kafka") || list.contains("all")
+                        deployRedis = list.contains("redis") || list.contains("all")
                         deployMinikube = list.contains("minikube") || list.contains("all")
                     } else {
                         echo "Triggered manually or via SCM. Using parameter checkbox values."
@@ -38,10 +41,11 @@ pipeline {
                         deployKeycloak = params.DEPLOY_KEYCLOAK
                         deployJenkins = params.DEPLOY_JENKINS
                         deployKafka = params.DEPLOY_KAFKA
+                        deployRedis = params.DEPLOY_REDIS
                         deployMinikube = params.DEPLOY_MINIKUBE
                     }
 
-                    echo "Target deployment states -> Postgres: ${deployPostgres}, Keycloak: ${deployKeycloak}, Jenkins: ${deployJenkins}, Kafka: ${deployKafka}, Minikube: ${deployMinikube}"
+                    echo "Target deployment states -> Postgres: ${deployPostgres}, Keycloak: ${deployKeycloak}, Jenkins: ${deployJenkins}, Kafka: ${deployKafka}, Redis: ${deployRedis}, Minikube: ${deployMinikube}"
                 }
             }
         }
@@ -56,6 +60,7 @@ pipeline {
                     sh 'cp $SECRET_ENV_FILE keycloak/.env'
                     sh 'cp $SECRET_ENV_FILE jenkins/.env'
                     sh 'cp $SECRET_ENV_FILE kafka/.env'
+                    sh 'cp $SECRET_ENV_FILE redis/.env'
                 }
             }
         }
@@ -157,6 +162,17 @@ pipeline {
             }
             steps {
                 dir('kafka') {
+                    sh 'docker compose up -d'
+                }
+            }
+        }
+
+        stage('Deploy redis') {
+            when {
+                expression { return deployRedis }
+            }
+            steps {
+                dir('redis') {
                     sh 'docker compose up -d'
                 }
             }

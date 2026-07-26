@@ -1,0 +1,24 @@
+name: redis
+services:
+  redis:
+    image: redis:${REDIS_VERSION:-8.2-alpine}
+    container_name: homeserver-redis
+    ports:
+      - "${REDIS_HOST_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - gateway_net
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+
+networks:
+  gateway_net:
+    external: true
