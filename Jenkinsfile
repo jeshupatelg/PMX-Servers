@@ -43,6 +43,13 @@ pipeline {
                         deployKafka = params.DEPLOY_KAFKA
                         deployRedis = params.DEPLOY_REDIS
                         deployMinikube = params.DEPLOY_MINIKUBE
+
+                        // Explicitly disable minikube on SCM/commit triggers (webhooks/polling)
+                        boolean isSCM = causes.any { it._class.contains('SCMTrigger') }
+                        if (isSCM) {
+                            echo "SCM commit trigger detected. Forcing deployMinikube to false."
+                            deployMinikube = false
+                        }
                     }
 
                     echo "Target deployment states -> Postgres: ${deployPostgres}, Keycloak: ${deployKeycloak}, Jenkins: ${deployJenkins}, Kafka: ${deployKafka}, Redis: ${deployRedis}, Minikube: ${deployMinikube}"
