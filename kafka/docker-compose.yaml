@@ -15,7 +15,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
       - KAFKA_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093
       - KAFKA_LOG_DIRS=/var/lib/kafka/data
-      - KAFKA_CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
+      - CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
     volumes:
       - kafka_data:/var/lib/kafka/data
     restart: unless-stopped

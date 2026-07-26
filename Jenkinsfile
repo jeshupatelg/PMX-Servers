@@ -14,7 +14,7 @@ pipeline {
         booleanParam(name: 'DEPLOY_JENKINS', defaultValue: true, description: 'Deploy Jenkins Server')
         booleanParam(name: 'DEPLOY_KAFKA', defaultValue: true, description: 'Deploy Kafka Server')
         booleanParam(name: 'DEPLOY_REDIS', defaultValue: true, description: 'Deploy Redis Server')
-        booleanParam(name: 'DEPLOY_MINIKUBE', defaultValue: true, description: 'Deploy Minikube & Kubernetes configurations')
+        booleanParam(name: 'DEPLOY_MINIKUBE', defaultValue: false, description: 'Deploy Minikube & Kubernetes configurations')
         string(name: 'DEPLOY_SERVERS_LIST', defaultValue: '', description: 'Comma-separated list of servers to deploy (e.g., postgres,kafka or all) when called by other jobs')
     }
 
