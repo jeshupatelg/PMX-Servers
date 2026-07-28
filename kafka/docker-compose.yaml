@@ -4,7 +4,7 @@ services:
     image: apache/kafka:${KAFKA_VERSION:-4.0.2}
     container_name: kafka
     ports:
-      - "${KAFKA_EXTERNAL_PORT:-9092}:29092"
+      - "${KAFKA_EXTERNAL_PORT:-9092}:29092" # host port for debugging
     environment:
       - KAFKA_NODE_ID=1
       - KAFKA_PROCESS_ROLES=broker,controller
@@ -18,8 +18,14 @@ services:
       - CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
     volumes:
       - kafka_data:/var/lib/kafka/data
+    networks:
+      - kafka_net
     restart: unless-stopped
 
 volumes:
   kafka_data:
     driver: local
+
+networks:
+  kafka_net:
+    external: true
