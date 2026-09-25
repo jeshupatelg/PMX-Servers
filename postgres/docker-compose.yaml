@@ -10,7 +10,7 @@ services:
     ports:
       - "${POSTGRES_HOST_PORT}:5432" # host port for debugging
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     networks:
       - gateway_net
       - postgres_net
