@@ -8,6 +8,7 @@ kafka/.env
 # Ignore agent outputs and analysis files
 .agent/
 
+
 # IDE configurations
 .idea/
 .vscode/
