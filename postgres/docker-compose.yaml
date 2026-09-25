@@ -1,7 +1,7 @@
 name: postgres
 services:
   postgres:
-    image: postgres:${POSTGRES_VERSION}
+    image: postgres:15
     container_name: homeserver-pg
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
